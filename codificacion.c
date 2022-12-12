@@ -1,22 +1,18 @@
-/*****************************************************************
-	Codificación mediante el algoritmo de Huffman 
-	Este programa se encarga de codificar un archivo de cualquier tipo en un 
-    archivo binario usando el algoritmo de Huffman, para posteiormente
-    decodificarlo con otro programa.
-	
-    Fecha: 04/11/2021
-	Version: 1.0 
-	Autores:
-			-Martinez Ruiz Alfredo
-			-Mendez Castañeda Aurora
-			-Mendez Hipolito Emilio
-			-Meza Vargas Brandon David
+//*****************************************************************
+//ESCUELA SUPERIOR DE CÓMPUTO - IPN
+//Curso: Análisis y Diseño de algoritmos
+//Autores:
+            //De la Guerra Gonzalez Diego Alejandro
+            //Ojeda Navarro Guillermo
+            //Chino Garcia Juan David
 
-*****************************************************************/
+//Compilación: "gcc codificacion.c tiempo.c -o codificar"
+//Ejecución: "./codificar <nombre del archivo con extensión>"
+//*****************************************************************
 
-/*****************************************************************
-    DECLARACIÓN DE LIBREREÍAS
-*****************************************************************/
+//*****************************************************************
+//LIBRERIAS INCLUIDAS
+//*****************************************************************
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,50 +22,48 @@
 #include <unistd.h>
 #include "tiempo.h"
 
-/*****************************************************************
-    FUNCIÓN PRINCIPAL
-*****************************************************************/
-int main(int argc, char const *argv[])
+//*****************************************************************
+//    PROGRAMA PRINCIPAL
+//*****************************************************************
+int main(int argc, char *argv[])
 {
-    // ----------------------- DECLARACIÓN DE VAIRABLES USADAS EN MAIN -----------------------
-    double utime0, stime0, wtime0,utime1, stime1, wtime1; //Variables para medici�n de tiempos
-    unsigned long tam;            //varibale que almacena el tamaño del archivo a leer
-    FILE *archivoOriginal = NULL; //Variables para el archivo original
-    int i = 0;                    //varibale para loops
-    lista *l = NULL;              //variable para la lista
-    arbol *a;                     //variable para el arbol
-    int bit = 7;                  //para hacer el corrimiento de bits
-    unsigned char auxCara = 0;    //Auxiliar que nos servirá para almacenar los caracteres codificados
+    //*************************************************************
+    // Declaración de variables para el PROGRAMA PRINCIPAL
+    //*************************************************************
+    double utime0, stime0, wtime0,utime1, stime1, wtime1; //Para la medición de tiempos
+    FILE *arch = NULL; //Apuntador al archivo para leer
+    unsigned long tam;            //Almacena el tamaño del archivo a leer
+    int i = 0;                    //Para los loops
+    lista *l = NULL;              //Para la lista
+    arbol *a;                     //Para el arbol
+    int bit = 7;                  //Para hacer el corrimiento de bits
+    unsigned char auxCara = 0;    //Auxiliar para almacenar los caracteres codificados
 
-
-    // ------------------------------ LECTURA DEL ARCHIVO Y BYTES ------------------------------
-    printf("\nArchivo a codificar: ");
-    scanf("%s", archivo);                   //leemos el nombre del archivo a codificar
-    archivoOriginal = fopen(archivo, "rb"); //abrimos el archivo en modo lectura binaria
-    // Si el archivo es nulo
-    if (archivoOriginal == NULL)
+    printf("\nNombre del archivo: ");
+    scanf("%s", archivo);                   
+    arch = fopen(archivo, "rb"); //Abrimos el archivo en modo lectura binaria
+    if (arch == NULL) // Si el archivo es nulo
     {
-        perror("\nNombre incorrecto o no existe el archivo");
-        exit(1); //salimos del programa
+        printf("\nNombre incorrecto o no existe el archivo"); 
+        exit(1); 
     }
     
-    //******************************************************************	
-	//Iniciar el conteo del tiempo para las evaluaciones de rendimiento
-	//******************************************************************	
-	uswtime(&utime0, &stime0, &wtime0);
-	//******************************************************************
-    
+    //******************************************************************    
+    //Iniciar el conteo del tiempo para las evaluaciones de rendimiento
+    //******************************************************************    
+    uswtime(&utime0, &stime0, &wtime0);
+    //******************************************************************
+    tam = detallesArchivo(arch); 
 
-    // Obtenemos los detalles del archivo, en este caso el tamaño
-    tam = detallesArchivo(archivoOriginal); // lo almacenamos en tam
-
-    // Pasamos los datos del archivo hacia el arreglo
-    unsigned char *datos = (char *)malloc(sizeof(char) * tam); //establecemos el tamaño del archivo
-    fread(datos, sizeof(unsigned char), tam, archivoOriginal); // Leemos el contenido del archivo
+    // Se pasan los datos leidos del archivo al arreglo
+    unsigned char *datos = (char *)malloc(sizeof(char) * tam); 
+    fread(datos, sizeof(unsigned char), tam, arch); // Leemos el contenido del archivo
 
 
-    // ----------------------------- CREAMOS LA LISTA DE FRECUENCIAS -----------------------------
-    unsigned long frecuencias[256] = {0}; //arreglo de 256 posiciones, cada posicion representa un caracter
+    //********************************************************************************
+    //CREAR LA LISTA DE FRECUENCIAS 
+    //********************************************************************************
+    unsigned long frecuencias[256] = {0}; //Arreglo de 256 posiciones, cada posicion representa un caracter
     while (i < tam)
     {
         frecuencias[datos[i]]++; //sumamos uno a la frecuencia en la posicion del caracter
@@ -81,33 +75,36 @@ int main(int argc, char const *argv[])
     {
         if (frecuencias[k] != 0)
         {
-            a = (arbol *)malloc(sizeof(arbol)); // creamos un nuevo árbol que irá en ese nodo
-            a->dato = k;                        // se asigna el byte
-            a->frec = frecuencias[k];           // se asigna la frecuencia del byte
+            a = (arbol *)malloc(sizeof(arbol)); // Crear un nuevo nodo para elarbol 
+            a->dato = k;                        // Asignación del byte
+            a->frec = frecuencias[k];           // Asignación de la frecuencia del byte
 
-            agregarLista(&l, a); //agregamos al principio de la lista
+            agregarLista(&l, a); //Agregacioón al principio de la lista
         }
     }
-    // Ordenamos la lista de bytes ascendentemente respecto a sus frecuencias
+    // Ordenar la lista de bytes ascendentemente respecto a sus frecuencias
     mergeSort(&l);
 
 
-    // -------------------- ESCRIBIMOS LOS BYTES Y LAS FRECUENCIAS SU ARCHIVO ----------------------
+    //************************************************************************
+    // ESCRITURA DE LOS BYTES Y LAS FRECUENCIAS EN ARCHIVO 
+    //************************************************************************
     escribirArchivoFrecuencias(l);
 
+    //************************************************************************
+    // CREAMOS EL ARBOL Y OBTENER LA ALTURA
+    //************************************************************************
+    l = crearArbol(l);           //Unión los arboles de la lista en uno solo
+    altura = alturaArbol(l->ar); //Obtención de la altura del arbol
 
-    // ------------------------- CREAMOS EL ÁRBOL Y OBETENEMOS LA ALTURA----------------------------
-    l = crearArbol(l);           //se juntan los arboles de la lista en uno solo
-    altura = alturaArbol(l->ar); //obtenemos la altura del arbol
-
-
-    // ------------ CODIFICAMOS CADA CARACTER Y LO GUARDAMOS CADA CÓDIGO EN UN ARREGLO -------------
-    // Inicializamos el arreglo temporal que guardará los códigos
+    //***********************************************************************
+    //CODIFICACIÓN DE CADA CARACTER Y LO GUARDAMOS CADA CÓDIGO EN UN ARREGLO -------------
+    // Inicializamos el arreglo temporal que guardarÃ¡ los códigos
     arregloBitsTemp = (unsigned char *)malloc(sizeof(unsigned char) * (altura + 1)); 
     codificarHojas(l->ar, 0, arregloBitsTemp); // Mandamos a almacenar todos los códidos de las hojas
 
 
-    // -------- CODIFICAMOS LOS ELEMENTOS DEL ARCHIVO RESPECTO A EL ARREGLO DE CÓDIGOS ----------
+    // -------- CODIFICAMOS LOS ELEMENTOS DEL ARCHIVO RESPECTO A EL ARREGLO DE CODIGOS ----------
     int indice = 0; // Indice acumulador para detectar la cantidad de bits que se van codificando
     // Abrimos el archivo binario
     FILE *codificado = NULL;           //variable para el archivo codificado
@@ -130,7 +127,7 @@ int main(int argc, char const *argv[])
             }
 
             /*  Hacemos la compresion haciendo corrimientos ayudandonos de la variable bit
-                Así llevamos la cuenta de los bits procesados para ir encendiendo cada uno de los bytes del 
+                AsÃ­ llevamos la cuenta de los bits procesados para ir encendiendo cada uno de los bytes del 
                 archivo (acomodamos y encendemos), cuando se procesan los 8 bits escribimos en el archivo
             */
             auxCara = auxCara | (codigosHojas[caracter][j] << bit);
@@ -150,33 +147,33 @@ int main(int argc, char const *argv[])
     fclose(codificado);
     
     
-    //******************************************************************	
-	//Evaluar los tiempos de ejecuci�n 
-	//******************************************************************
-	uswtime(&utime1, &stime1, &wtime1);
-	
-	//C�lculo del tiempo de ejecuci�n del programa
-	printf("\n");
-	printf("real (Tiempo total)  %.10f s\n",  wtime1 - wtime0);
-	printf("\n");
+    //******************************************************************    
+    //Evaluar los tiempos de ejecución 
+    //******************************************************************
+    uswtime(&utime1, &stime1, &wtime1);
+    
+    //Cálculo del tiempo de ejecución del programa
+    printf("\n");
+    printf("real (Tiempo total)  %.10f s\n",  wtime1 - wtime0);
+    printf("\n");
     
     return 0; //salimos
-}
+   }
 
 /*****************************************************************
-    IMPLEMENTACIÓN DE FUNCIONES
+    IMPLEMENTACIóN DE FUNCIONES
 *****************************************************************/
 /*
-    Función para obtener los detalles del archivo, en este caso nos interesa el tamaño.
+    Función para obtener los detalles del archivo, en este caso nos interesa el tamaÃ±o.
     Se hizo uso de la libreria sys/stat.h.
-    REcibe el archivo del que deseamos saber su tamaño
-    Retorna el tamaño del archivo
+    REcibe el archivo del que deseamos saber su tamaÃ±o
+    Retorna el tamaÃ±o del archivo
 */
-unsigned long detallesArchivo(FILE * archivoOriginal)
+unsigned long detallesArchivo(FILE * arch)
 {
     struct stat buffer; //estructura para recuperar atributos del archivo
 
-    unsigned long descriptor = fileno(archivoOriginal); //regresa el descriptor de archivo
+    unsigned long descriptor = fileno(arch); //regresa el descriptor de archivo
     //con la llamada a la funcion fstat obtenemos detalles del archivo
     if (fstat(descriptor, &buffer) == -1)
     { //si regresa -1 hubo un error
@@ -184,12 +181,12 @@ unsigned long detallesArchivo(FILE * archivoOriginal)
         exit(1); //Salimos del programa
     }
 
-    return buffer.st_size; //Retornamos el tamaño del archivo
+    return buffer.st_size; //Retornamos el tamaÃ±o del archivo
 }
 
 /*
     Función que agrega un elemento al inicio de la lista
-    Recibe la lista donde se insertará el elemento y el elemento a insertar
+    Recibe la lista donde se insertarÃ¡ el elemento y el elemento a insertar
     en este caso el arbol con el dato y la frecuencia
     Retorna el nuevo elemento 
 */
@@ -198,13 +195,13 @@ void agregarLista(lista * *l, arbol * a)
     lista *nuevoArbol;                           //creamos una variable para alamacenar el dato
     nuevoArbol = (lista *)malloc(sizeof(lista)); //le asignamos espacio al dato
     nuevoArbol->ar = a;                          //guardamos el arbol en el nuevo nodo
-    nuevoArbol->siguiente = *l;                  //el siguiente nodo será igual a la lista que teniamos
+    nuevoArbol->siguiente = *l;                  //el siguiente nodo serÃ¡ igual a la lista que teniamos
     (*l) = nuevoArbol;
 }
 
 /*
     La siguiente función es para ordenar nuestra lista, se uso mergeSort teniendo una complejidad O(nLogn)
-    Recibe la lista que será ordenada bajo este método
+    Recibe la lista que serÃ¡ ordenada bajo este mÃ©todo
     No regresa nada ya que se esta modificando directamente la lista
 */
 void mergeSort(lista * *l)
@@ -236,7 +233,7 @@ lista *mezcla(lista * a, lista * b)
 {
     lista *resultado = NULL; //variable que almacenara la lista completa
 
-    //Si a es nula regresamos la lista b solamente y viceversa, serán los casos base
+    //Si a es nula regresamos la lista b solamente y viceversa, serÃ¡n los casos base
     if (a == NULL)
         return b; //regresamos la sublista b
     else if (b == NULL)
@@ -318,7 +315,7 @@ void escribirArchivoFrecuencias(lista * l)
 /*
     Funcion que crea el arbol a partir de ir uniendo dos arboles de la lista 
     y sumando sus frecuencias.
-    Recibe la lista que contiene los arboles que se juntarán.
+    Recibe la lista que contiene los arboles que se juntarÃ¡n.
     Regresa la lista con un solo arbol que fue unido
 */
 lista *crearArbol(lista * l)
@@ -338,12 +335,12 @@ lista *crearArbol(lista * l)
         /*
         SI la lista es nula o si la frecuencia del arbol unido anteriormente es menor
         a la frecuencia del arbol, haremos que el nuevo elemento de la lista sea el elemento
-        desde el cual se recorrio la lista y la lista será el elemento unido
+        desde el cual se recorrio la lista y la lista serÃ¡ el elemento unido
     */
         if (l == NULL || arbolUnido->ar->frec <= l->ar->frec)
         {
-            arbolUnido->siguiente = l; //el siguiente elemento será al que apunto al recorrer
-            l = arbolUnido;            //la lista tserá el arbol unido
+            arbolUnido->siguiente = l; //el siguiente elemento serÃ¡ al que apunto al recorrer
+            l = arbolUnido;            //la lista tserÃ¡ el arbol unido
         }
         /*
         Si la lista no es nula y la frecuencia del arbol unido es mayor a la del arbol
@@ -392,7 +389,7 @@ arbol *unirArboles(arbol * aMayor, arbol * aMenor)
 
 int codificarHojas(arbol * nodo, int nivel, unsigned char *arregloBitsTemp)
 {
-    // Si el nodo actual no está vacío
+    // Si el nodo actual no esta vacio
     if (nodo != NULL)
     {
         // En caso de que ya haya encontrado la hoja que contiene al caracter
@@ -438,7 +435,7 @@ int alturaArbol(arbol * a)
     //calculamos la altura de la izquierda
     int alturaIzquierda = alturaArbol(a->izq);
 
-    //la altura mayor se guardará como la altura del arbol
+    //la altura mayor se guardarÃ¡ como la altura del arbol
     alt = alturaIzquierda > alturaDerecha ? alturaIzquierda + 1 : alturaDerecha + 1;
 
     return alt; //Retornamos la altura

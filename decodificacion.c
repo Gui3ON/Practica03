@@ -1,21 +1,17 @@
-/*****************************************************************
-	Decodificaci√≥n mediante el algoritmo de Huffman 
-	Este programa se encarga de decodificar un archivo de binario en un 
-    archivo de cualquier tipo usando el algoritmo de Huffman, este pre-
-    viamente codificado con otro programa.
-	
-    Fecha: 04/11/2021
-	Version: 1.0 
-	Autores:
-			-Martinez Ruiz Alfredo
-			-Mendez Casta√±eda Aurora
-			-Mendez Hipolito Emilio
-			-Meza Vargas Brandon David
-
-*****************************************************************/
+//*****************************************************************
+//ESCUELA SUPERIOR DE C√ìMPUTO - IPN
+//Curso: An·lisis y DiseÒo de algoritmos
+//Autores:
+            //De la Guerra Gonzalez Diego Alejandro
+            //Ojeda Navarro Guillermo
+            //Chino Garcia Juan David
+            
+//CompilaciÛn: "gcc codificacion.c tiempo.c -o decodificar"
+//EjecuciÛn: "./decodificar <nombre del archivo con extensiÛn>"
+//*****************************************************************
 
 /*****************************************************************
-    DECLARACI√ìN DE LIBRERE√çAS
+    DECLARACI”N DE LIBRERIAS
 *****************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,7 +23,7 @@
 #include "tiempo.h"
 
 /*****************************************************************
-    FUNCI√ìN PRINCIPAL
+    PROGRAMA PRINCIPAL
 *****************************************************************/
 int main(int argc, char const *argv[])
 {   
