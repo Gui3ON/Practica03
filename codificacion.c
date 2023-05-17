@@ -2,9 +2,7 @@
 //ESCUELA SUPERIOR DE CÓMPUTO - IPN
 //Curso: Análisis y Diseño de algoritmos
 //Autores:
-            //De la Guerra Gonzalez Diego Alejandro
             //Ojeda Navarro Guillermo
-            //Chino Garcia Juan David
 
 //Compilación: "gcc codificacion.c tiempo.c -o codificar"
 //Ejecución: "./codificar <nombre del archivo con extensión>"
