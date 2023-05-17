@@ -1,17 +1,17 @@
 //*****************************************************************
-//ESCUELA SUPERIOR DE CÓMPUTO - IPN
-//Curso: An�lisis y Dise�o de algoritmos
+//ESCUELA SUPERIOR DE CÃ“MPUTO - IPN
+//Curso: Análisis y Diseño de algoritmos
 //Autores:
-            //De la Guerra Gonzalez Diego Alejandro
+         
             //Ojeda Navarro Guillermo
-            //Chino Garcia Juan David
+   
             
-//Compilaci�n: "gcc codificacion.c tiempo.c -o decodificar"
-//Ejecuci�n: "./decodificar <nombre del archivo con extensi�n>"
+//Compilación: "gcc codificacion.c tiempo.c -o decodificar"
+//Ejecución: "./decodificar <nombre del archivo con extensión>"
 //*****************************************************************
 
 /*****************************************************************
-    DECLARACI�N DE LIBRERIAS
+    DECLARACIÓN DE LIBRERIAS
 *****************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,15 +27,15 @@
 *****************************************************************/
 int main(int argc, char const *argv[])
 {   
-    // ----------------------- DECLARACIÓN DE VAIRABLES USADAS EN MAIN -----------------------
-    double utime0, stime0, wtime0,utime1, stime1, wtime1; //Variables para medici�n de tiempos
+    // ----------------------- DECLARACIÃ“N DE VAIRABLES USADAS EN MAIN -----------------------
+    double utime0, stime0, wtime0,utime1, stime1, wtime1; //Variables para medición de tiempos
     lista *l = NULL;                                    //variable para la lista
     arbol *ar;                                          //variable para el arbol
     unsigned char caracter = 0;                         //variabel caracter del archivo de frecuencias
     char *nombreArchivoFrecuencias = "frecuencias.txt"; //almacena el nombre del archivo
     char nombreArchivoCodificado[40];                   //almacena el nombre del archivo codificado
     FILE *tablaFrecuencias = NULL;                      //variable para el archivo de frecuencas
-    unsigned long tam;                                  //varibale que almacena el tamaño del archivo
+    unsigned long tam;                                  //varibale que almacena el tamaÃ±o del archivo
     long i = 0;                                         //variable para loops
     
 
@@ -56,7 +56,7 @@ int main(int argc, char const *argv[])
         exit(1); //salimos del programa
     }
 
-    //obtenemos los detalles del archivo, en este caso el tamaño
+    //obtenemos los detalles del archivo, en este caso el tamaÃ±o
     tam = detallesArchivo(tablaFrecuencias);
 
 
@@ -80,15 +80,15 @@ int main(int argc, char const *argv[])
     fclose(tablaFrecuencias); //cerramos el archivo
 
 
-    // ------------------------- CREAMOS EL ÁRBOL Y OBETENEMOS LA ALTURA----------------------------
+    // ------------------------- CREAMOS EL ÃRBOL Y OBETENEMOS LA ALTURA----------------------------
     l = crearArbol(l);           //se juntan los arboles de la lista en uno solo
     altura = alturaArbol(l->ar); //obtenemos la altura del arbol
 
 
-    // ------------ CODIFICAMOS CADA CARACTER Y LO GUARDAMOS CADA CÓDIGO EN UN ARREGLO -------------
-    // Inicializamos el arreglo temporal que guardará los códigos
+    // ------------ CODIFICAMOS CADA CARACTER Y LO GUARDAMOS CADA CÃ“DIGO EN UN ARREGLO -------------
+    // Inicializamos el arreglo temporal que guardarÃ¡ los cÃ³digos
     arregloBitsTemp = (unsigned char *)malloc(sizeof(unsigned char) * (altura + 1)); 
-    codificarHojas(l->ar, 0, arregloBitsTemp); // Mandamos a almacenar todos los códidos de las hojas
+    codificarHojas(l->ar, 0, arregloBitsTemp); // Mandamos a almacenar todos los cÃ³didos de las hojas
 
 
     // ----------------------------- LECTURA DEL ARCHIVO DECODIFICADO -------------------------------
@@ -104,30 +104,30 @@ int main(int argc, char const *argv[])
         exit(1); //salimos del programa
     }
 
-    //obtenemos los detalles del archivo, en este caso el tamaño
+    //obtenemos los detalles del archivo, en este caso el tamaÃ±o
     tam = detallesArchivo(decodificar);
 
 
-    // -------- DECODIFICAMOS LOS ELEMENTOS DEL ARCHIVO RESPECTO A EL ARREGLO DE CÓDIGOS ----------
+    // -------- DECODIFICAMOS LOS ELEMENTOS DEL ARCHIVO RESPECTO A EL ARREGLO DE CÃ“DIGOS ----------
     //Establecemos el arreglo que guardara los bytes del archivo codificado
     unsigned char *datosCod = (char *)malloc(sizeof(char) * tam);
     fread(datosCod, sizeof(unsigned char), tam, decodificar); // Leemos el arreglo de bytes del archivo
 
-    //Quitamos la extensión .bit para volver a generar el archivo original
+    //Quitamos la extensiÃ³n .bit para volver a generar el archivo original
     nombreArchivoCodificado[strlen(nombreArchivoCodificado) - 4] = 0;
 
-    //mandamos a llamar a la función que hace la decodificacion, pasándole el arreglo de bytes codificados, 
-    // tamaño de archivo .dat, árbol y el nombre nuevo
+    //mandamos a llamar a la funciÃ³n que hace la decodificacion, pasÃ¡ndole el arreglo de bytes codificados, 
+    // tamaÃ±o de archivo .dat, Ã¡rbol y el nombre nuevo
     decodificarArchivo(datosCod, tam, l->ar, nombreArchivoCodificado);
 
     fclose(decodificar); //cerramos el archivo
     
     //******************************************************************	
-	//Evaluar los tiempos de ejecuci�n 
+	//Evaluar los tiempos de ejecución 
 	//******************************************************************
 	uswtime(&utime1, &stime1, &wtime1);
 	
-	//C�lculo del tiempo de ejecuci�n del programa
+	//Cálculo del tiempo de ejecución del programa
 	printf("\n");
 	printf("real (Tiempo total)  %.10f s\n",  wtime1 - wtime0);
 	printf("\n");
@@ -136,18 +136,18 @@ int main(int argc, char const *argv[])
 }
 
 /*****************************************************************
-    IMPLEMENTACIÓN DE FUNCIONES
+    IMPLEMENTACIÃ“N DE FUNCIONES
 *****************************************************************/
 /*
-    Esta función se encarga de realizar la decodificacion del archivo.
-    Recibe los datos codificados, el tamaño de los datos, el primer arbol de la lista 
+    Esta funciÃ³n se encarga de realizar la decodificacion del archivo.
+    Recibe los datos codificados, el tamaÃ±o de los datos, el primer arbol de la lista 
     y el nombre del archivo para quitarle la extension .dat
 
 */
 void decodificarArchivo(unsigned char *datos, unsigned long tam, arbol *raiz, char *nombre)
 {
-    FILE *decodificado = NULL; // Variable que apuntará al archivo original
-    // Variable que almacenará el número de bytes escritos en el archivo original
+    FILE *decodificado = NULL; // Variable que apuntarÃ¡ al archivo original
+    // Variable que almacenarÃ¡ el nÃºmero de bytes escritos en el archivo original
     long unsigned bytesEscritos = 0;    
 
     int bit;                   // Para ir recorriendo los bits de cada byte
@@ -161,7 +161,7 @@ void decodificarArchivo(unsigned char *datos, unsigned long tam, arbol *raiz, ch
     arbol *a = raiz;
 
     /*
-        Este while realizará la decodificación, se itera las veces del tamaño del archivo codificado
+        Este while realizarÃ¡ la decodificaciÃ³n, se itera las veces del tamaÃ±o del archivo codificado
     */
     unsigned long i = 0; //variable para recorrer todos los bytes del archivo decodificado
     while (i < tam)
@@ -187,7 +187,7 @@ void decodificarArchivo(unsigned char *datos, unsigned long tam, arbol *raiz, ch
             {
                 unsigned char dato = a->dato;
                 fwrite(&dato, sizeof(char), 1, decodificado); // Escribimos el byte
-                a = raiz; //Reiniciamos el arbol a la raíz para comenzar con otro caracter
+                a = raiz; //Reiniciamos el arbol a la raÃ­z para comenzar con otro caracter
                 bytesEscritos++; // Aumentamos la cantidad de bytes escritos del original    
             }
             bit--;
@@ -201,7 +201,7 @@ void decodificarArchivo(unsigned char *datos, unsigned long tam, arbol *raiz, ch
 
 int codificarHojas(arbol *nodo, int nivel, unsigned char *arregloBitsTemp)
 {
-    // Si el nodo actual no está vacío
+    // Si el nodo actual no estÃ¡ vacÃ­o
     if (nodo != NULL)
     {
         // En caso de que ya haya encontrado la hoja que contiene al caracter
@@ -227,10 +227,10 @@ int codificarHojas(arbol *nodo, int nivel, unsigned char *arregloBitsTemp)
 }
 
 /*
-    Función para obtener los detalles del archivo, en este caso nos interesa el tamaño.
+    FunciÃ³n para obtener los detalles del archivo, en este caso nos interesa el tamaÃ±o.
     Se hizo uso de la libreria sys/stat.h.
-    REcibe el archivo del que deseamos saber su tamaño
-    Retorna el tamaño del archivo
+    REcibe el archivo del que deseamos saber su tamaÃ±o
+    Retorna el tamaÃ±o del archivo
 
 */
 unsigned long detallesArchivo(FILE *cod)
@@ -245,12 +245,12 @@ unsigned long detallesArchivo(FILE *cod)
         exit(1); //Salimos del programa
     }
 
-    return buffer.st_size; //Retornamos el tamaño del archivo
+    return buffer.st_size; //Retornamos el tamaÃ±o del archivo
 }
 
 /*
-    Función que agrega un elemento al final de la lista
-    Recibe la lista donde se insertará el elemento y el elemento a insertar
+    FunciÃ³n que agrega un elemento al final de la lista
+    Recibe la lista donde se insertarÃ¡ el elemento y el elemento a insertar
     en este caso el arbol con el dato y la frecuencia
     Retorna el nuevo elemento 
 */
@@ -259,10 +259,10 @@ void agregarLista(lista **l, arbol *a)
     lista *nuevoArbol, *aux;                     //creamos una variable para alamacenar el dato
     nuevoArbol = (lista *)malloc(sizeof(lista)); //le asignamos espacio al dato
     nuevoArbol->ar = a;                          //guardamos el arbol en el nuevo nodo
-    nuevoArbol->siguiente = NULL;                //el siguiente nodo será igual a la lista que teniamos
+    nuevoArbol->siguiente = NULL;                //el siguiente nodo serÃ¡ igual a la lista que teniamos
 
     if (*l == NULL)
-    {                    //verificamos si la lsita esta vacía
+    {                    //verificamos si la lsita esta vacÃ­a
         *l = nuevoArbol; //agregar primer elemento
     }
     else
@@ -279,7 +279,7 @@ void agregarLista(lista **l, arbol *a)
 /*
     Funcion que crea el arbol a partir de ir uniendo dos arboles de la lista 
     y sumando sus frecuencias.
-    Recibe la lista que contiene los arboles que se juntarán.
+    Recibe la lista que contiene los arboles que se juntarÃ¡n.
     Regresa la lista con un solo arbol que fue unido
 */
 lista *crearArbol(lista *l)
@@ -293,18 +293,18 @@ lista *crearArbol(lista *l)
         //Como iremos comparando de dos en dos los arboles, recorremos la lista en dos elementos
         l = l->siguiente->siguiente;
 
-        //mandamos a llamar la función que une los arboles
+        //mandamos a llamar la funciÃ³n que une los arboles
         arbolUnido->ar = unirArboles(arbolUnido->siguiente->ar, arbolUnido->ar);
 
         /*
             SI la lista es nula o si la frecuencia del arbol unido anteriormente es menor
             a la frecuencia del arbol, haremos que el nuevo elemento de la lista sea el elemento
-            desde el cual se recorrio la lista y la lista será el elemento unido
+            desde el cual se recorrio la lista y la lista serÃ¡ el elemento unido
         */
         if (l == NULL || arbolUnido->ar->frec <= l->ar->frec)
         {
-            arbolUnido->siguiente = l; //el siguiente elemento será al que apunto al recorrer
-            l = arbolUnido;            //la lista tserá el arbol unido
+            arbolUnido->siguiente = l; //el siguiente elemento serÃ¡ al que apunto al recorrer
+            l = arbolUnido;            //la lista tserÃ¡ el arbol unido
         }
         /*
             Si la lista no es nula y la frecuencia del arbol unido es mayor a la del arbol
@@ -328,7 +328,7 @@ lista *crearArbol(lista *l)
 }
 
 /*
-    Esta función une los arboles, para hacer esto se crea un nuevo arbol y se almacena en el
+    Esta funciÃ³n une los arboles, para hacer esto se crea un nuevo arbol y se almacena en el
     la frecuencia del arbol mayor y menor para asi formar un solo arbol
     Recibe el arbol con el caracter con mayor frecuencia y un arbol con el caracter de menor frecuencia
     Retorna el nuevo arbol que se almacenara en la lista
@@ -345,7 +345,7 @@ arbol *unirArboles(arbol *aMayor, arbol *aMenor)
 }
 
 /*
-    FUnción para calcular la altura del arbol.
+    FUnciÃ³n para calcular la altura del arbol.
     Recibe la altura del arbol del que se desea saber la altura
     Devuelve la ltura del arbol
 */
@@ -363,7 +363,7 @@ int alturaArbol(arbol *a)
     //calculamos la altura de la izquierda
     int alturaIzquierda = alturaArbol(a->izq);
 
-    //la altura mayor se guardará como la altura del arbol
+    //la altura mayor se guardarÃ¡ como la altura del arbol
     alt = alturaIzquierda > alturaDerecha ? alturaIzquierda + 1 : alturaDerecha + 1;
 
     return alt; //Retornamos la altura
